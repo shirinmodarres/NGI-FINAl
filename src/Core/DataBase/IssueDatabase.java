@@ -104,7 +104,7 @@ public class IssueDatabase {
 
         try {
             String query = "SELECT i.*, p.* FROM issues i " +
-                    "LEFT JOIN project p ON i.project_id = p.`id-project`"; // Join issues with projects table
+                    "LEFT JOIN project p ON i.project_id = p.`id`"; // Join issues with projects table
             PreparedStatement statement = database.getConnection().prepareStatement(query);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {

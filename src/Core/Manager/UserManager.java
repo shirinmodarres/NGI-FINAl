@@ -31,21 +31,21 @@ public class UserManager {
         return users;
     }
 
-    public void updateUser(String nickname, String email, String password, Role role) {
-        User userToUpdate = findUserByEmail(email);
-
-        System.out.println("user manager");
-        if (userToUpdate != null) {
-            userToUpdate.setName(nickname);
-            userToUpdate.setEmail(email);
-            userToUpdate.setPassword(password);
-            userToUpdate.setRole(role);
-//            orm.getRepository("User").update(userToUpdate);
-
-        }
-        userDatabase.editUser(userToUpdate);
-        System.out.println(userToUpdate);
-    }
+//    public void updateUser(String nickname, String email, String password, Role role) {
+//        User userToUpdate = findUserByEmail(email);
+//
+//        System.out.println("user manager");
+//        if (userToUpdate != null) {
+//            userToUpdate.setName(nickname);
+//            userToUpdate.setEmail(email);
+//            userToUpdate.setPassword(password);
+//            userToUpdate.setRole(role);
+////            orm.getRepository("User").update(userToUpdate);
+//
+//        }
+//        userDatabase.editUser(userToUpdate);
+//        System.out.println(userToUpdate);
+//    }
 
 //    public void removeUser(int userName) {
 //        users.removeIf(user -> user.getName().equals(userName));
@@ -53,7 +53,7 @@ public class UserManager {
 //    }
 
     public ArrayList<User> getAllUsers() {
-        return new ArrayList<>(getUserDatabase().getUsers()) ;
+        return new ArrayList<>(getUserDatabase().getAllUsers()) ;
     }
 
     public User getUserById(int userId) {
@@ -76,7 +76,7 @@ public class UserManager {
 
     public User findUserByName(String email) {
 
-        for (User user : userDatabase.getUsers()) {
+        for (User user : userDatabase.getAllUsers()) {
             if (user.getEmail().equalsIgnoreCase(email)) {
                 return user;
             }

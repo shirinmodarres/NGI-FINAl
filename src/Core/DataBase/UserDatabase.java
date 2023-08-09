@@ -73,7 +73,7 @@ public class UserDatabase {
                 throw new IllegalArgumentException("Invalid role value: " + roleInt);
         }
     }
-    public List<User> getUsers() {
+    public List<User> getAllUsers() {
         List<User> users = new ArrayList<>();
 
         try {

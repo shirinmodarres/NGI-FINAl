@@ -2,40 +2,44 @@ package Core.Manager;
 
 import Core.DataBase.ProjectDatabase;
 import Core.Model.Project;
+import Core.Model.User;
 
 import java.util.ArrayList;
 
 public class ProjectManager {
-    private ArrayList<Project> projects;
-    private ProjectDatabase projectDatabase;
+    private static ProjectManager instance;
+    private static ProjectDatabase projectDatabase;
 
     public ProjectManager(ProjectDatabase projectDatabase) {
-        this.projects = new ArrayList<>();
         this.projectDatabase = projectDatabase;
+    }
+    public static ProjectManager getInstance(ProjectDatabase projectDatabase) {
+        if (instance == null) {
+            instance = new ProjectManager(projectDatabase);
+        }
+        return instance;
     }
 
     public void addProject(String title, String description) {
-        Project newProject = new Project( title, description);
-        projects.add(newProject);
+        Project newProject = new Project(-1, title, description);
         projectDatabase.saveProject(title,description);
     }
-
-    public void updateProject(String title, String description) {
-        Project projectToUpdate = getProjectByTitle(title);
-        if (projectToUpdate != null) {
-            projectToUpdate.setTitle(title);
-            projectToUpdate.setDescription(description);
-            projectDatabase.updateProject(projectToUpdate);
-        }
-    }
-
-//    public void removeProject(String title) {
-//        projects.removeIf(project -> project.getTitle().equals(title));
-//        projectDatabase.removeProject(title);
+//
+//    public void updateProject(String title, String description) {
+//        Project projectToUpdate = getProjectByTitle(title);
+//        if (projectToUpdate != null) {
+//            projectToUpdate.setTitle(title);
+//            projectToUpdate.setDescription(description);
+//            projectDatabase.updateProject(projectToUpdate);
+//        }
 //    }
 
+    public void removeProject(Project project) {
+        projectDatabase.removeProject(project.getId());
+    }
+
     public ArrayList<Project> getAllProjects() {
-        return new ArrayList<>(projects);
+        return new ArrayList<>(getProjectDatabase().getAllProjects());
     }
 
     public Project getProjectByTitle(String title) {

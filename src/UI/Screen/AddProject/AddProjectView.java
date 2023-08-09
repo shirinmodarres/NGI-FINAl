@@ -48,7 +48,6 @@ public class AddProjectView extends JPanel {
 
         CircleList circleListPanel = new CircleList(memberNames, 50, 10, 10);
         JScrollPane usersCircleScrollPane = circleListPanel.getScrollPane();
-//        usersCircleScrollPane.setBackground(new Color(0,0,0,0));
 
         usersCircleScrollPane.setBounds(20, 200, 200, 150);
         add(usersCircleScrollPane);

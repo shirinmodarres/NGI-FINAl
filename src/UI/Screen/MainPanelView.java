@@ -68,14 +68,6 @@ public class MainPanelView extends JPanel {
         }
     });
 
-    // Panels and Controllers for members and projects
-//    EditMemberView editMemberView = new EditMemberView(userManager, new EditMemberView.EditMemberViewEventListener() {
-//        @Override
-//        public void PageClosed() {
-//            editMemberView.setVisible(false);
-//            getParent().setVisible(true);
-//        }
-//    });
     MemberView memberView = new MemberView(userManager, new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -93,7 +85,7 @@ public class MainPanelView extends JPanel {
             // Hide add member view, show member view, and update its content
             addMemberView.setVisible(false);
             memberView.setVisible(true);
-            memberView.pageIsEmpty();
+            memberView.generateMemberPlacePanels();
         }
     }, new AddMemberView.ProjectSelectedListener() {
         @Override

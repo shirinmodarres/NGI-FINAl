@@ -14,9 +14,9 @@ public class ProjectController {
         return projectManager.getProjectByTitle(title);
     }
 
-    public void addProject(String title, String description) {
-        projectManager.addProject(title, description);
-    }
+//    public void addProject(String title, String description) {
+//        projectManager.addProject(title, description);
+//    }
 
     public ProjectManager getProjectManager() {
         return projectManager;

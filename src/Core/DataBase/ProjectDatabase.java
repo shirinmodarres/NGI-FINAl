@@ -43,11 +43,11 @@ private Database database=Database.getInstance();
             PreparedStatement statement = database.getConnection().prepareStatement(query);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                int projectId = resultSet.getInt("id-project");
+                int projectId = resultSet.getInt("id");
                 String title = resultSet.getString("title");
                 String description = resultSet.getString("description");
 
-                Project project = new Project(title, description);
+                Project project = new Project(projectId,title, description);
                 project.setId(projectId);
                 projects.add(project);
             }
@@ -66,12 +66,12 @@ private Database database=Database.getInstance();
             ResultSet resultSet = statement.executeQuery();
 
             if (resultSet.next()) {
-                int projectId = resultSet.getInt("id-project");
+                int id = resultSet.getInt("id");
                 String title = resultSet.getString("title");
                 String description = resultSet.getString("description");
 
-                Project project = new Project(title, description);
-                project.setId(projectId);
+                Project project = new Project(id,title, description);
+                project.setId(id);
                 return project;
             }
         } catch (SQLException e) {
@@ -82,7 +82,7 @@ private Database database=Database.getInstance();
     }
     public void updateProject(Project project) {
         try {
-            String query = "UPDATE `ngi-final`.`project` SET `title` = ?, `description` = ? WHERE `id-project` = ?";
+            String query = "UPDATE project SET `title` = ?, `description` = ? WHERE `id` = ?";
             PreparedStatement statement = database.getConnection().prepareStatement(query);
             statement.setString(1, project.getTitle());
             statement.setString(2, project.getDescription());
@@ -99,10 +99,26 @@ private Database database=Database.getInstance();
             throw new RuntimeException("Error updating project: " + e.getMessage());
         }
     }
+    public void removeProject(int id) {
+        try {
+            String query = "DELETE FROM project WHERE id=?";
+            PreparedStatement statement = database.getConnection().prepareStatement(query);
+            statement.setInt(1, id);
 
+            int rowsAffected = statement.executeUpdate();
+
+            if (rowsAffected == 0) {
+                System.out.println("Project with id '" + id + "' not found in the database.");
+            } else {
+                System.out.println("Project with id '" + id + "' removed successfully.");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
     public void assignUserToProject(int userId, int projectId) {
         try {
-            String query = "INSERT INTO `ngi-final`.`user_project` (`user_id`, `project_id`) VALUES (?, ?);";
+            String query = "INSERT INTO `user_project` (`user_id`, `project_id`) VALUES (?, ?);";
             PreparedStatement statement = database.getConnection().prepareStatement(query);
             statement.setInt(1, userId);
             statement.setInt(2, projectId);

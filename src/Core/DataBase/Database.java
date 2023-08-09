@@ -24,10 +24,10 @@ public class Database {
 
         try {
             String query = "CREATE TABLE IF NOT EXISTS `project` (\n" +
-                    "  `id-project` INT NOT NULL AUTO_INCREMENT,\n" +
+                    "  `id` INT NOT NULL AUTO_INCREMENT,\n" +
                     "  `title` VARCHAR(45) NOT NULL,\n" +
                     "  `description` VARCHAR(100) NULL,\n" +
-                    "  PRIMARY KEY (`id-project`));";
+                    "  PRIMARY KEY (`id`));";
 
             connection.createStatement().executeUpdate(query);
         } catch (SQLException e) {
@@ -58,7 +58,7 @@ public class Database {
                     "  `project_id` INT NOT NULL,\n" +
                     "  PRIMARY KEY (`id`),\n" +
                     "  FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,\n" +
-                    "  FOREIGN KEY (`project_id`) REFERENCES `project` (`id-project`) ON DELETE CASCADE ON UPDATE CASCADE\n" +
+                    "  FOREIGN KEY (`project_id`) REFERENCES `project` (`id`) ON DELETE CASCADE ON UPDATE CASCADE\n" +
                     ");";
 
             connection.createStatement().executeUpdate(createUserProjectTableQuery);

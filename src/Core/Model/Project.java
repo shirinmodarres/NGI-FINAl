@@ -26,7 +26,8 @@ public class Project {
 
     }
 
-    public Project(String title, String description) {
+    public Project(int id, String title, String description) {
+        this.id=id;
         this.createDate = new Date();
         this.title = title;
         this.description = description;

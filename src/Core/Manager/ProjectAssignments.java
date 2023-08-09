@@ -7,13 +7,19 @@ import Core.Model.User;
 import java.util.*;
 
 public class ProjectAssignments {
-
+    private static ProjectAssignments instance;
     private Map<User, List<Project>> userToProjectsMap;
 
-    public ProjectAssignments() {
+    private ProjectAssignments() {
         userToProjectsMap = new HashMap<>();
     }
 
+    public static ProjectAssignments getInstance() {
+        if (instance == null) {
+            instance = new ProjectAssignments();
+        }
+        return instance;
+    }
     public void assignProjectToUser(User user, Project project) {
         userToProjectsMap.computeIfAbsent(user, k -> new ArrayList<>()).add(project);
     }

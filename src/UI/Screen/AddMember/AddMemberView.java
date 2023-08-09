@@ -28,10 +28,12 @@ public class AddMemberView extends JPanel {
         setBackground(new Color(251, 246, 230));
         setVisible(false);
 
+        //Header
         Font titleFont = new Font("Calibri", Font.PLAIN, 32);
         CustomLabel title = new CustomLabel("Add Members", titleFont, 20, 32, 390, 40);
         add(title);
 
+        //setUp component
         Font font = new Font("Calibri", Font.PLAIN, 20);
         CustomLabel name = new CustomLabel("Name:", font, 25, 80, 110, 23);
         add(name);
@@ -110,7 +112,6 @@ public class AddMemberView extends JPanel {
         }
 
 
-
         add(contentPanel);
 //        JScrollPane scrollPane = new JScrollPane(contentPanel);
 //        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
@@ -165,6 +166,7 @@ public class AddMemberView extends JPanel {
     public interface ProjectSelectedListener {
         void onProjectSelected(Project project);
     }
+
     private void createCircle(JLabel label) {
         int labelWidth = label.getWidth();
         int labelHeight = label.getHeight();
@@ -179,6 +181,7 @@ public class AddMemberView extends JPanel {
         label.revalidate();
         label.repaint();
     }
+
     private class CirclePanel extends JPanel {
         private String projectName;
 

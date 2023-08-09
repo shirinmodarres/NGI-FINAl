@@ -1,12 +1,10 @@
 package UI.Screen.Member;
 
 import Core.DataBase.UserDatabase;
-
 import Core.Manager.UserManager;
 import Core.Model.User;
 import UI.Component.*;
 import UI.Screen.EditMember.EditMemberView;
-//import UI.Screen.EditMember.EditMemberView;
 
 import javax.swing.*;
 import java.awt.*;
@@ -24,7 +22,6 @@ public class MemberView extends JPanel {
 
     public MemberView(UserManager userManager, ActionListener addMemberEvent) {
 
-        // Provide userManager to AddMemberController
         memberController = new MemberController(userManager);
 
         //Setting
@@ -63,18 +60,9 @@ public class MemberView extends JPanel {
 
     }
 
-    public void pageIsEmpty() {
-        memberPanel.setLayout(null);
-        JScrollPane memberScrollPane = new JScrollPane(memberPanel);
-        memberScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        memberScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        add(memberScrollPane);
-        //Membership Card
-        generateMemberPlacePanels();
-
-    }
-
     private JPanel createAddMemberPanel(ActionListener addMemberEvent) {
+
+        //Setting
         JPanel addMemberPlace = new JPanel();
         addMemberPlace.setBorder(border);
         addMemberPlace.setLayout(null);
@@ -115,7 +103,7 @@ public class MemberView extends JPanel {
 
 
         //Generate Membership card
-        for (User user : memberController.getUserManager().getUserDatabase().getUsers()) {
+        for (User user : memberController.getUserManager().getUserDatabase().getAllUsers()) {
             currentX += 175 + padding;
             if (currentX + 175 + padding > containerWidth) {
                 currentX = x;
@@ -166,6 +154,7 @@ public class MemberView extends JPanel {
             repaint();
         });
         memberPlace.add(editBtn);
+
         Color color = getRandomColor();
         Circle circle = new Circle(color, 65, 40, 50, 50);
         memberPlace.add(circle);
