@@ -9,11 +9,9 @@ import Core.Model.Project;
 import UI.Component.RoundedBorder;
 import UI.Component.RoundedButton;
 
-import UI.Screen.AddIssue.AddIssueController;
 import UI.Screen.AddIssue.AddIssueView;
 import UI.Screen.BoardPanel.BoardPanelView;
 
-import UI.Screen.Issue.IssueController;
 import UI.Screen.Issue.IssueView;
 import UI.Screen.ProjectInfo.ProjectInfoView;
 
@@ -89,13 +87,25 @@ public class ProjectPanelView extends JPanel {
             BoardPanelView boardPanelView = new BoardPanelView(boardManager, project); // Pass the project
             currentPanel = boardPanelView;
         } else if (button == isssueButton) {
-            IssueManager issueManager=IssueManager.getInstance();
+            IssueManager issueManager=IssueManager.getInstance(IssueDatabase.getInstance());
             IssueDatabase issueDatabase=IssueDatabase.getInstance();
-            IssueController issueController=new IssueController(issueManager);
-            IssueView issueView=new IssueView(project, issueManager, new IssueView.IssueViewEventListener() {
+            AddIssueView addIssueView=new AddIssueView(project, issueManager, new AddIssueView.AddIssueViewEventListener() {
+                @Override
+                public void onPageClosed() {
+                }
+            });
+            add(addIssueView);
+            IssueView issueView=new IssueView(project, issueManager, new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+
+                    addIssueView.setVisible(true);
+                }
+            }, new IssueView.IssueViewEventListener() {
                 @Override
                 public void onIssueClick(Issue issue) {
-                    //Edit isuue
+                    System.out.println("hi");
+
 
                 }
             });

@@ -74,7 +74,6 @@ public class MainPanelView extends JPanel {
             // Hide member view and show add member view
             memberView.setVisible(false);
             addMemberView.setVisible(true);
-//            editMemberView.setVisible(true);
             projectView.setVisible(false);
         }
     });

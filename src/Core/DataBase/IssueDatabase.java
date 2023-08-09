@@ -127,7 +127,7 @@ public class IssueDatabase {
 
                 // Create the Project object for the issue
                 Project project = new Project();
-                project.setId(resultSet.getInt("p.id-project"));
+                project.setId(resultSet.getInt("p.id"));
                 project.setTitle(resultSet.getString("p.title"));
                 // Set other project fields if needed
 

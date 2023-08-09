@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Enumeration;
 import java.util.List;
 
 public class RadioButtonDrawer extends JPanel {
@@ -52,5 +53,14 @@ public class RadioButtonDrawer extends JPanel {
 
     public String getSelectedOption() {
         return selectedOption;
+    }
+    public String getSelectedValue() {
+        for (Enumeration<AbstractButton> buttons = buttonGroup.getElements(); buttons.hasMoreElements();) {
+            AbstractButton button = buttons.nextElement();
+            if (button.isSelected()) {
+                return button.getText();
+            }
+        }
+        return null; // No button is selected
     }
 }

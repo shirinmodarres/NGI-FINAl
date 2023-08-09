@@ -15,19 +15,19 @@ public class IssueManager {
         this.issues = new ArrayList<>();
     }
 
-    public static IssueManager getInstance() {
-        if (instance == null) {
-            instance = new IssueManager();
+    public static IssueManager getInstance(IssueDatabase instance) {
+        if (IssueManager.instance == null) {
+            IssueManager.instance = new IssueManager();
         }
-        return instance;
+        return IssueManager.instance;
     }
 
     public ArrayList<Issue> getAllIssues() {
         return (ArrayList<Issue>) issueDatabase.getAllIssues();
     }
 
-    public void addIssue(Issue issue,int projrctId) {
-        issueDatabase.saveIssue(issue,projrctId);
+    public void addIssue(Issue issue,int projectId) {
+        issueDatabase.saveIssue(issue,projectId);
     }
 
     public void editIssue( Issue editedIssue) {

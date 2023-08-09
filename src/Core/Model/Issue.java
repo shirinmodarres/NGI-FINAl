@@ -16,7 +16,7 @@ public class Issue {
     private Types types;
     private Priority priority;
     private ArrayList<String> tags;
-private  Project project;
+    private Project project;
 
     public Project getProject() {
         return project;
@@ -27,17 +27,19 @@ private  Project project;
     }
 
     // Constructor
-    public Issue(String title, String description, Status status,
-                 Types types, Priority priority, ArrayList<String> tags) {
 
+
+    public Issue(int id, String title, String description,
+                 Types types, Priority priority, ArrayList<String> tags, Project project) {
+        this.id = id;
         this.title = title;
         this.description = description;
-        this.status = status;
+        this.status = Status.TODO;
         this.createDate = new Date();
         this.types = types;
         this.priority = priority;
         this.tags = tags;
-
+        this.project = project;
     }
 
     public String getFormattedDate() {

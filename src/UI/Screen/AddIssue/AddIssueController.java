@@ -1,5 +1,6 @@
 package UI.Screen.AddIssue;
 
+import Core.DataBase.IssueDatabase;
 import Core.Manager.IssueManager;
 import Core.Model.Issue;
 import Core.Model.Priority;
@@ -13,7 +14,7 @@ public class AddIssueController {
     private IssueManager issueManager;
 
     public AddIssueController() {
-        this.issueManager = IssueManager.getInstance();
+        this.issueManager = IssueManager.getInstance(IssueDatabase.getInstance());
     }
 
     public Issue addIssue(String title, String description, Status status,

@@ -132,7 +132,7 @@ public class ProjectView extends JPanel {
         removeBtn.addActionListener(e -> {
             int dialogResult = JOptionPane.showConfirmDialog(
                     this,
-                    "Are you sure you want to remove this user?",
+                    "Are you sure you want to remove this project?",
                     "Confirm Removal",
                     JOptionPane.YES_NO_OPTION
             );

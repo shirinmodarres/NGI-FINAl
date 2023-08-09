@@ -1,14 +1,20 @@
 package UI.Screen.Issue;
 
+import Core.DataBase.IssueDatabase;
+import Core.DataBase.UserDatabase;
 import Core.Manager.IssueManager;
+import Core.Manager.UserManager;
 import Core.Model.Issue;
 import Core.Model.Project;
+import Core.Model.User;
 import UI.Component.CustomLabel;
 import UI.Component.CustomTextField;
 import UI.Component.ImageButton;
 import UI.Component.RoundedBorder;
 import UI.Screen.AddIssue.AddIssueController;
 import UI.Screen.AddIssue.AddIssueView;
+import UI.Screen.EditIssue.EditIssueView;
+import UI.Screen.EditMember.EditMemberView;
 
 import javax.swing.*;
 import java.awt.*;
@@ -21,62 +27,53 @@ public class IssueView extends JPanel {
     private final Font textFont = new Font("Calibri", Font.PLAIN, 20);
     private final Font subTextFont = new Font("Calibri", Font.PLAIN, 14);
     private final Font titleFont = new Font("Calibri", Font.PLAIN, 32);
-ActionListener addEvent;
     IssueController issueController;
     JPanel issuePanel = new JPanel();
     IssueViewEventListener issueViewEventListener; // Listener for issue click event
-
-    public IssueView(Project project, IssueManager issueManager, IssueViewEventListener issueViewEventListener) {
+EditIssueView editIssueView;
+    public IssueView(Project project, IssueManager issueManager, ActionListener addIssueEvent, IssueViewEventListener issueViewEventListener) {
         this.issueViewEventListener = issueViewEventListener;
         issueController = new IssueController(issueManager);
-        addEvent=new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
 
-                        AddIssueController addIssueController=new AddIssueController();
-                        AddIssueView addIssueView=new AddIssueView(issueManager);
-                        add(addIssueView);
-                        addIssueView.setVisible(true);
-                        revalidate();
-                        repaint();
-                    }
-            };
-
-
-
+        //Setting
         setLayout(null);
         setVisible(false);
         setBounds(0, 0, 700, 570);
         setBackground(new Color(251, 246, 230));
 
+        //Header
         CustomLabel title = new CustomLabel("Issues", titleFont, 20, 32, 390, 40);
-        ImageButton searchIssueIcon = new ImageButton("img/search.png", 500, 32, 44, 44);
-        CustomTextField searchField = new CustomTextField("Search..", 554, 44, 130, 30);
+        add(title);
 
-        searchIssueIcon.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyPressed(KeyEvent e) {
-                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+        ImageButton searchIssueIcon = new ImageButton("img/search.png", 500, 32, 44, 44);
+        add(searchIssueIcon);
+        CustomTextField searchField = new CustomTextField("Search..", 554, 44, 130, 30);
+        add(searchField);
+
+//        searchIssueIcon.addKeyListener(new KeyAdapter() {
+//            @Override
+//            public void keyPressed(KeyEvent e) {
+//                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 //                    String searchText = searchField.getText().trim();
 //                    if (!searchText.isEmpty()) {
-//                        issueController.findIssueByTitle(searchText);
+//                        issueManager.getIssueDatabase().(searchText);
 //                    }
-                }
-            }
-        });
+//                }
+//            }
+//        });
 
-        JPanel addIssuePlace = createAddIssuePanel(addEvent);
-        generateIssuePlacePanels();
+
+        JPanel addIssuePlace = createAddIssuePanel(addIssueEvent);
+        generateIssuePlacePanels(project);
 
         add(addIssuePlace);
-        add(searchField);
-        add(title);
-        add(searchIssueIcon);
 
         setVisible(true);
     }
 
-    private JPanel createAddIssuePanel(ActionListener addEvent) {
+    private JPanel createAddIssuePanel(ActionListener addIssueEvent) {
+
+        //Setting
         JPanel addIssuePlace = new JPanel();
         addIssuePlace.setBorder(new RoundedBorder(new Color(147, 191, 207), 6, 3));
         addIssuePlace.setLayout(null);
@@ -85,13 +82,13 @@ ActionListener addEvent;
         addIssuePlace.setBounds(20, 103, 130, 107);
 
         ImageButton addIssueIcon = new ImageButton("img/add25.png", 43, 32, 44, 44);
-        addIssueIcon.addActionListener(addEvent);
+        addIssueIcon.addActionListener(addIssueEvent);
         addIssuePlace.add(addIssueIcon);
 
         return addIssuePlace;
     }
 
-    public void generateIssuePlacePanels() {
+    public void generateIssuePlacePanels(Project project) {
         int x = 20;
         int y = 103;
         int padding = 70;
@@ -100,49 +97,102 @@ ActionListener addEvent;
         int currentY = y;
         Color color = getRandomColor();
 
-        List<Issue> issues = issueController.getIssueManager().getIssueDatabase().getAllIssues();
-        for (int i = 0; i < issues.size(); i++) {
+
+        for (Issue issue : issueController.getIssueManager().getIssueDatabase().getAllIssues()) {
             currentX += 130 + padding;
             if (currentX + 130 + padding > containerWidth) {
                 currentX = x;
                 currentY += 107 + padding;
             }
-
-            Issue issue = issues.get(i);
-            JPanel issuePlace = new JPanel();
-            issuePlace.setBorder(new RoundedBorder(color, 6, 3));
-            issuePlace.setLayout(null);
-            issuePlace.setBackground(new Color(color.getRed(), color.getGreen(), color.getBlue(), 60));
-            issuePlace.setBounds(currentX, currentY, 130, 107);
-            issuePlace.addMouseListener(new MouseAdapter() {
-                @Override
-                public void mouseClicked(MouseEvent e) {
-                    if (e.getClickCount() == 1) { // Check for single-click
-                        if (issueViewEventListener != null) {
-                            issueViewEventListener.onIssueClick(issue);
-                            System.out.println(issue.getTitle());
-
-                        }
-                    }
-                }
-            });
-
-            CustomLabel date = new CustomLabel(issue.getFormattedDate().toString(), subTextFont, 5, 5, 100, 25);
-            CustomLabel title = new CustomLabel(issue.getTitle(), textFont, 10, 30, 110, 25);
-            title.setHorizontalAlignment(JLabel.CENTER);
-
-            issuePlace.add(title);
-            issuePlace.add(date);
-
-            add(issuePlace);
+            generateIssue(project,issue, currentX, currentY, padding, containerWidth, color);
         }
 
-        int rowCount = (issues.size() + 2) / 3;
+    }
+
+    public void generateIssue(Project project,Issue issue, int x, int y, int padding, int containerWidth, Color color) {
+
+        //setUp
+        JPanel issuePlace = new JPanel();
+        issuePlace.setBorder(new RoundedBorder(color, 6, 3));
+        issuePlace.setLayout(null);
+        issuePlace.setBackground(new Color(color.getRed(), color.getGreen(), color.getBlue(), 60));
+        issuePlace.setBounds(x, y, 130, 107);
+        issuePlace.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 1) { // Check for single-click
+                    if (issueViewEventListener != null) {
+                        issueViewEventListener.onIssueClick(issue);
+                        System.out.println(issue.getTitle());
+
+                    }
+                }
+            }
+        });
+        add(issuePlace);
+
+        ImageButton removeBtn = new ImageButton("img/remove.png", 20, 10, 25, 25);
+        removeBtn.addActionListener(e -> {
+            int dialogResult = JOptionPane.showConfirmDialog(
+                    this,
+                    "Are you sure you want to remove this issue?",
+                    "Confirm Removal",
+                    JOptionPane.YES_NO_OPTION
+            );
+            if (dialogResult == JOptionPane.YES_OPTION) {
+                JPanel memberselectedPlace = (JPanel) removeBtn.getParent();
+                issueController.getIssueManager().getIssueDatabase().removeIssue(issue.getId());
+                issuePanel.remove(memberselectedPlace);
+                issuePanel.remove(memberselectedPlace.getParent());
+                issuePlace.setVisible(false);
+//                    memberPanel.repaint();
+//                    generateMemberPlacePanels();
+//                    memberPanel.getParent().repaint();
+//                    memberPanel.getParent().revalidate();
+            }
+        });
+        issuePlace.add(removeBtn);
+        ImageButton editBtn = new ImageButton("img/edit.png", 140, 10, 25, 25);
+        editBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                editIssueView = new EditIssueView(project,issue, IssueManager.getInstance(IssueDatabase.getInstance()), new EditIssueView.EditIssueViewEventListener() {
+                    @Override
+                    public void PageClosed(Issue updatedIssue) {
+                        issuePlace.removeAll();
+                        generateIssue(project,updatedIssue, x, y, padding, containerWidth,color);
+                        editIssueView.setVisible(false);
+                    }
+                });
+                add(editIssueView, 0);
+                revalidate();
+                repaint();
+            }
+        });
+        issuePlace.add(editBtn);
+
+        CustomLabel date = new CustomLabel(issue.getFormattedDate().toString(), subTextFont, 5, 5, 100, 25);
+        issuePlace.add(date);
+
+        CustomLabel title = new CustomLabel(issue.getTitle(), textFont, 10, 30, 110, 25);
+        title.setHorizontalAlignment(JLabel.CENTER);
+        issuePlace.add(title);
+
+        CustomLabel status = new CustomLabel(issue.getStatus().toString(), subTextFont, 10, 60, 110, 25);
+        issuePlace.add(status);
+
+        int rowCount = (issueController.getIssueManager().getIssueDatabase().getAllIssues().size() + 2) / 3;
         int totalHeight = rowCount * (107 + padding) + y;
+
         setPreferredSize(new Dimension(containerWidth, totalHeight));
+
     }
 
     public interface IssueViewEventListener {
         void onIssueClick(Issue issue);
     }
+
+
 }
+
+

@@ -113,9 +113,6 @@ public class AddMemberView extends JPanel {
 
 
         add(contentPanel);
-//        JScrollPane scrollPane = new JScrollPane(contentPanel);
-//        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-//        add(scrollPane);
 
 
         RoundedButton saveBtn = new RoundedButton("Save", 400, 510, 100, 40, new Color(96, 150, 180));

@@ -1,11 +1,10 @@
 package UI.Screen.AddIssue;
 
 import Core.Manager.IssueManager;
-import Core.Model.Issue;
-import Core.Model.Priority;
-import Core.Model.Status;
-import Core.Model.Types;
+import Core.Manager.ProjectManager;
+import Core.Model.*;
 import UI.Component.*;
+import UI.Screen.AddMember.AddMemberView;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,18 +13,16 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AddIssueView extends JDialog {
+public class AddIssueView extends JPanel {
     private AddIssueController addIssueController;
-    private AddIssueListener addIssueListener;
 
-    public AddIssueView(IssueManager issueManager) {
+    public AddIssueView(Project project, IssueManager issueManager, AddIssueViewEventListener addIssueViewEventListener) {
         addIssueController = new AddIssueController();
-        //SetUP
+        //Setting
         setLayout(null);
-        setBounds(130, 100, 615, 520);
-        setResizable(false);
-        setModal(true);
+        setBounds(0, 0, 700, 570);
         setBackground(new Color(251, 246, 230));
+        setVisible(false);
 
 
         // Set up the panel components
@@ -70,7 +67,7 @@ public class AddIssueView extends JDialog {
         CustomLabel tag = new CustomLabel("Tags:", font, 325, 270, 90, 23);
         add(tag);
 
-        CustomTextArea tagArea =new CustomTextArea("Tags..",320,290,250,120, new Color(147, 191, 207));
+        CustomTextArea tagArea = new CustomTextArea("Tags..", 320, 290, 250, 120, new Color(147, 191, 207));
         add(tagArea);
         // Create a "Save" button to save the issue
         RoundedButton saveButton = new RoundedButton("Save", 150, 430, 100, 30, new Color(96, 150, 180));
@@ -100,14 +97,10 @@ public class AddIssueView extends JDialog {
                     wordList.add(word.trim());
                 }
 
-                Issue newIssue = new Issue(issueTitle, issueDescription, Status.TODO, type, priority, wordList);
+                addIssueController.addIssue(issueTitle, issueDescription, Status.TODO, type, priority, wordList, project.getId());
 
-                if (addIssueListener != null) {
-                    addIssueListener.onIssueAdded(newIssue);
-                }
+                addIssueViewEventListener.onPageClosed();
 
-                // Close the "Add Issue" view
-                dispose();
             }
         });
         add(saveButton);
@@ -118,16 +111,19 @@ public class AddIssueView extends JDialog {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Close the "Add Issue" view without saving
-                dispose();
+                addIssueViewEventListener.onPageClosed();
+
             }
         });
         add(cancelButton);
 
-        // Show the "Add Issue" view as a modal dialog
-        setVisible(true);
     }
 
-    public interface AddIssueListener {
-        void onIssueAdded(Issue issue);
+    public interface AddIssueViewEventListener {
+        void onPageClosed();
+
     }
 }
+
+
+
