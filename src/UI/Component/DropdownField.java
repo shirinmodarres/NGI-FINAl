@@ -1,11 +1,8 @@
 package UI.Component;
 
 import javax.swing.*;
-import javax.swing.plaf.basic.BasicComboBoxUI;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.util.ArrayList;
+import java.util.List;
 
 public class DropdownField extends JComboBox<String> {
 
@@ -14,8 +11,8 @@ public class DropdownField extends JComboBox<String> {
     private Color arrowColor;
 
     private final Font subTextFont = new Font("Calibri", Font.BOLD, 14);
-    public DropdownField(String[] items, int x, int y, int width, int height) {
-        super(items);
+    public DropdownField(List<String> items, int x, int y, int width, int height) {
+        super(items.toArray(new String[0])); // Convert the List to an array
         setBounds(x, y, width, height);
         setBackground(Color.WHITE);
         this.fontSize = 18;

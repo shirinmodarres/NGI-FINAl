@@ -1,6 +1,8 @@
 package UI.Screen.EditIssue;
 
+import Core.DataBase.UserDatabase;
 import Core.Manager.IssueManager;
+import Core.Manager.UserManager;
 import Core.Model.*;
 import UI.Component.*;
 import UI.Screen.EditMember.EditMemberView;
@@ -62,6 +64,16 @@ public class EditIssueView extends JPanel {
         RadioButtonDrawer radioButtonDrawerType = new RadioButtonDrawer(typeList, 320, 225, 250, 40);
         add(radioButtonDrawerType);
 
+        CustomLabel userLabel = new CustomLabel("Members: ", font, 25, 270, 90, 23);
+        add(userLabel);
+
+        List<String> userList = new ArrayList<>();
+        for (User user : UserManager.getInstance(UserDatabase.getInstance()).getUserDatabase().getAllUsers()) {
+            userList.add(user.getName());
+        }
+        DropdownField users = new DropdownField(userList, 20, 290, 150, 40);
+        add(users);
+
         CustomLabel tag = new CustomLabel("Tags:", font, 325, 270, 90, 23);
         add(tag);
 
@@ -77,7 +89,9 @@ public class EditIssueView extends JPanel {
                 Types selectedType = Types.valueOf(radioButtonDrawerType.getSelectedValue().toUpperCase());
                 ArrayList<String> tags = new ArrayList<>(Arrays.asList(tagArea.getText().split(",")));
 
-                Issue updatedIssue = new Issue(initialIssue.getId(), title, description, selectedType,selectedPriority,tags,project);
+                String selectedUser = (String) users.getSelectedItem();
+                User updatedUser = UserManager.getInstance(UserDatabase.getInstance()).findUserByName(selectedUser);
+                Issue updatedIssue = new Issue(initialIssue.getId(), title, description,Status.TODO, selectedType,selectedPriority,tags,project.getId(),updatedUser.getId());
                 issueManager.getIssueDatabase().updateIssue(updatedIssue);
 
                 // Clear input fields

@@ -1,7 +1,9 @@
 package UI.Screen.AddIssue;
 
+import Core.DataBase.UserDatabase;
 import Core.Manager.IssueManager;
 import Core.Manager.ProjectManager;
+import Core.Manager.UserManager;
 import Core.Model.*;
 import UI.Component.*;
 import UI.Screen.AddMember.AddMemberView;
@@ -13,16 +15,16 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AddIssueView extends JPanel {
+public class AddIssueView extends JFrame {
     private AddIssueController addIssueController;
 
-    public AddIssueView(Project project, IssueManager issueManager, AddIssueViewEventListener addIssueViewEventListener) {
+    public AddIssueView(Project project, IssueManager issueManager) {
         addIssueController = new AddIssueController();
         //Setting
         setLayout(null);
-        setBounds(0, 0, 700, 570);
+        setSize(650, 550);
         setBackground(new Color(251, 246, 230));
-        setVisible(false);
+        setVisible(true);
 
 
         // Set up the panel components
@@ -49,7 +51,7 @@ public class AddIssueView extends JPanel {
 
         List<String> priorityList = new ArrayList<>();
         for (Priority priorities : Priority.values()) {
-            priorityList.add(priorities.name()); // Convert enum value to string
+            priorityList.add(priorities.toString()); // Convert enum value to string
         }
         RadioButtonDrawer radioButtonDrawerPriority = new RadioButtonDrawer(priorityList, 20, 150, 250, 50);
         add(radioButtonDrawerPriority);
@@ -59,10 +61,20 @@ public class AddIssueView extends JPanel {
 
         List<String> typeList = new ArrayList<>();
         for (Types types : Types.values()) {
-            typeList.add(types.name()); // Convert enum value to string
+            typeList.add(types.toString()); // Convert enum value to string
         }
         RadioButtonDrawer radioButtonDrawerType = new RadioButtonDrawer(typeList, 320, 225, 250, 40);
         add(radioButtonDrawerType);
+
+        CustomLabel userLabel = new CustomLabel("Members: ", font, 25, 270, 90, 23);
+        add(userLabel);
+
+        List<String> userList = new ArrayList<>();
+        for (User user : UserManager.getInstance(UserDatabase.getInstance()).getUserDatabase().getAllUsers()) {
+            userList.add(user.getName());
+        }
+        DropdownField users = new DropdownField(userList, 20, 290, 150, 40);
+        add(users);
 
         CustomLabel tag = new CustomLabel("Tags:", font, 325, 270, 90, 23);
         add(tag);
@@ -79,7 +91,8 @@ public class AddIssueView extends JPanel {
                 String issueDescription = descriptionField.getText();
                 String selectedPriority = radioButtonDrawerPriority.getSelectedOption();
                 String selectedType = radioButtonDrawerType.getSelectedOption();
-
+                String selectedUser = (String) users.getSelectedItem();
+                User updatedUser = UserManager.getInstance(UserDatabase.getInstance()).findUserByName(selectedUser);
                 // Assuming you have a method to convert enum strings to enum values
                 Priority priority = Priority.valueOf(selectedPriority);
                 Types type = Types.valueOf(selectedType);
@@ -97,9 +110,9 @@ public class AddIssueView extends JPanel {
                     wordList.add(word.trim());
                 }
 
-                addIssueController.addIssue(issueTitle, issueDescription, Status.TODO, type, priority, wordList, project.getId());
+                addIssueController.addIssue(issueTitle, issueDescription, Status.TODO, type, priority, wordList, project.getId(),updatedUser.getId());
 
-                addIssueViewEventListener.onPageClosed();
+                dispose();
 
             }
         });
@@ -111,7 +124,7 @@ public class AddIssueView extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Close the "Add Issue" view without saving
-                addIssueViewEventListener.onPageClosed();
+                dispose();
 
             }
         });
@@ -119,10 +132,10 @@ public class AddIssueView extends JPanel {
 
     }
 
-    public interface AddIssueViewEventListener {
-        void onPageClosed();
-
-    }
+//    public interface AddIssueViewEventListener {
+//        void onPageClosed();
+//
+//    }
 }
 
 

@@ -59,12 +59,15 @@ public class AddMemberView extends JPanel {
         ArrayList<String> roleName = new ArrayList<>();
         for (Role r : Role.values()) {
             switch (r) {
-                case PO -> roleName.add("PO");
-                case TESTER -> roleName.add("TESTER");
-                case DEVELOPER -> roleName.add("DEVELOPER");
+                case PO: roleName.add("PO");
+                break;
+                case TESTER : roleName.add("TESTER");
+                break;
+                case DEVELOPER : roleName.add("DEVELOPER");
+                break;
             }
         }
-        DropdownField roleDropDown = new DropdownField(roleName.toArray(new String[0]), 380, 183, 260, 40);
+        DropdownField roleDropDown = new DropdownField(roleName, 380, 183, 260, 40);
         add(roleDropDown);
 
         CustomLabel project = new CustomLabel("Project:", font, 25, 240, 110, 23);

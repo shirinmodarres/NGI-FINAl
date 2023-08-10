@@ -16,21 +16,12 @@ public class Issue {
     private Types types;
     private Priority priority;
     private ArrayList<String> tags;
-    private Project project;
-
-    public Project getProject() {
-        return project;
-    }
-
-    public void setProject(Project project) {
-        this.project = project;
-    }
-
-    // Constructor
+    private int projectId;
+    private int userId;
 
 
-    public Issue(int id, String title, String description,
-                 Types types, Priority priority, ArrayList<String> tags, Project project) {
+    public Issue(int id, String title, String description,Status status,
+                 Types types, Priority priority, ArrayList<String> tags, int projectId,int userId) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -39,8 +30,38 @@ public class Issue {
         this.types = types;
         this.priority = priority;
         this.tags = tags;
-        this.project = project;
+        this.projectId=projectId;
+        this.userId=userId;
     }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
+    public Types getTypes() {
+        return types;
+    }
+
+    public void setTypes(Types types) {
+        this.types = types;
+    }
+
+    public int getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(int projectId) {
+        this.projectId = projectId;
+    }
+
+    // Constructor
+
+
+
 
     public String getFormattedDate() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy MMM dd"); // Format the date as "YYYY-MM-DD"

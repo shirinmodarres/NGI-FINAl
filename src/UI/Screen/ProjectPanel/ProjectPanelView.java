@@ -12,6 +12,7 @@ import UI.Component.RoundedButton;
 import UI.Screen.AddIssue.AddIssueView;
 import UI.Screen.BoardPanel.BoardPanelView;
 
+import UI.Screen.DeafultBoard.DeafultBoardView;
 import UI.Screen.Issue.IssueView;
 import UI.Screen.ProjectInfo.ProjectInfoView;
 
@@ -29,7 +30,24 @@ public class ProjectPanelView extends JPanel {
     private RoundedButton isssueButton;
     private RoundedButton reportButton;
     private Project project;
+    IssueManager issueManager=IssueManager.getInstance(IssueDatabase.getInstance());
+    IssueDatabase issueDatabase=IssueDatabase.getInstance();
 
+    IssueView issueView=new IssueView(project, issueManager, new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            System.out.println("hiii");
+            AddIssueView addIssueView=new AddIssueView(project, issueManager);
+
+        }
+    }, new IssueView.IssueViewEventListener() {
+        @Override
+        public void onIssueClick(Issue issue) {
+            System.out.println("hi");
+
+
+        }
+    });
     public ProjectPanelView(Project project) {
         this.project = project; // Store the project
         setLayout(null);
@@ -60,6 +78,7 @@ public class ProjectPanelView extends JPanel {
         currentPanel = projectInfoView; // Replace with your specific panel
         contentPanel.add(currentPanel);
     }
+    DeafultBoardView deafultBoardView=new DeafultBoardView();
 
     private RoundedButton createTabButton(String text, int x, int y, Color color) {
         RoundedButton button = new RoundedButton(text, x, y, 115, 35, color);
@@ -83,40 +102,19 @@ public class ProjectPanelView extends JPanel {
             currentPanel=projectInfoView;
 
         } else if (button == boardButton) {
-            BoardManager boardManager = new BoardManager();
-            BoardPanelView boardPanelView = new BoardPanelView(boardManager, project); // Pass the project
-            currentPanel = boardPanelView;
+//            BoardManager boardManager = new BoardManager();
+//            BoardPanelView boardPanelView = new BoardPanelView(boardManager, project); // Pass the project
+
+            currentPanel = deafultBoardView;
         } else if (button == isssueButton) {
-            IssueManager issueManager=IssueManager.getInstance(IssueDatabase.getInstance());
-            IssueDatabase issueDatabase=IssueDatabase.getInstance();
-            AddIssueView addIssueView=new AddIssueView(project, issueManager, new AddIssueView.AddIssueViewEventListener() {
-                @Override
-                public void onPageClosed() {
-                }
-            });
-            add(addIssueView);
-            IssueView issueView=new IssueView(project, issueManager, new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-
-                    addIssueView.setVisible(true);
-                }
-            }, new IssueView.IssueViewEventListener() {
-                @Override
-                public void onIssueClick(Issue issue) {
-                    System.out.println("hi");
-
-
-                }
-            });
-
-
             currentPanel =issueView; // Replace with the IssueDB panel
+
+
         } else if (button == reportButton) {
             currentPanel = new JPanel(); // Replace with the Report panel
         }
 
-        currentPanel.setBackground(new Color(251,246,230));
+        currentPanel.setBackground(new Color(251, 246, 230));
         contentPanel.add(currentPanel);
         cardLayout.show(contentPanel, button.getText());
 

@@ -78,6 +78,7 @@ public class Database {
                     "  `priority` INT NOT NULL,\n" + // Store priority as integer
                     "  `tags` TEXT,\n" +
                     "  `project_id` INT NOT NULL,\n" +
+                    "`user_id` INT NOT NULL,\n"+
                     "   PRIMARY KEY (`id`)\n" +
                     ");";
 

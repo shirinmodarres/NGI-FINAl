@@ -18,8 +18,8 @@ public class AddIssueController {
     }
 
     public Issue addIssue(String title, String description, Status status,
-                          Types types, Priority priority, ArrayList<String> tags, int projectId) {
-        Issue issue = new Issue(title, description, status, types, priority, tags);
+                          Types types, Priority priority, ArrayList<String> tags, int projectId,int userId) {
+        Issue issue = new Issue(-1,title, description, status, types, priority, tags,projectId,userId);
         issueManager.addIssue(issue,projectId);
         return issue;
     }

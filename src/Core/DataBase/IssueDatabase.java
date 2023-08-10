@@ -26,8 +26,8 @@ public class IssueDatabase {
     }
 
     public void saveIssue(Issue issue, int projectId) {
-        String query = "INSERT INTO `issues` (`title`, `description`, `status`, `createDate`, `updateDate`, `type`, `priority`, `tags`, `project_id`) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String query = "INSERT INTO `issues` (`title`, `description`, `status`, `createDate`, `updateDate`, `type`, `priority`, `tags`, `project_id`,`user_id`) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try {
             PreparedStatement preparedStatement = database.getConnection().prepareStatement(query);
@@ -39,7 +39,8 @@ public class IssueDatabase {
             preparedStatement.setInt(6, issue.getType().ordinal()); // Set type as ordinal value of enum
             preparedStatement.setInt(7, issue.getPriority().ordinal()); // Set priority as ordinal value of enum
             preparedStatement.setString(8, String.join(",", issue.getTags()));
-            preparedStatement.setInt(9, issue.getProject().getId());
+            preparedStatement.setInt(9, issue.getProjectId());
+            preparedStatement.setInt(10,issue.getUserId());
 
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
@@ -63,9 +64,10 @@ public class IssueDatabase {
             throw new RuntimeException("Error removing issue: " + e.getMessage());
         }
     }
+
     public void updateIssue(Issue issue) {
         try {
-            String query = "UPDATE `issues` SET `title` = ?, `description` = ?, `status` = ?, `createDate` = ?, `updateDate` = ?, `type` = ?, `priority` = ?, `tags` = ?, `project_id` = ? WHERE `id` = ?";
+            String query = "UPDATE `issues` SET `title` = ?, `description` = ?,  `createDate` = ?, `updateDate` = ?, `type` = ?, `priority` = ?, `tags` = ?, `project_id` = ? WHERE `id` = ?";
             PreparedStatement statement = database.getConnection().prepareStatement(query);
             statement.setString(1, issue.getTitle());
             statement.setString(2, issue.getDescription());
@@ -79,8 +81,8 @@ public class IssueDatabase {
             statement.setInt(6, issue.getType().ordinal());
             statement.setInt(7, issue.getPriority().ordinal());
             statement.setString(8, String.join(",", issue.getTags()));
-            if (issue.getProject() != null) {
-                statement.setInt(9, issue.getProject().getId());
+            if (issue.getProjectId() != 0) {
+                statement.setInt(9, issue.getProjectId());
             } else {
                 statement.setNull(9, java.sql.Types.INTEGER);
             }
@@ -104,7 +106,8 @@ public class IssueDatabase {
 
         try {
             String query = "SELECT i.*, p.* FROM issues i " +
-                    "LEFT JOIN project p ON i.project_id = p.`id`"; // Join issues with projects table
+                    "LEFT JOIN project p ON i.project_id = p.`id`" +
+                    "LEFT JOIN user u ON i.user_id = u.`id`"; // Join issues with projects table
             PreparedStatement statement = database.getConnection().prepareStatement(query);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
@@ -119,19 +122,19 @@ public class IssueDatabase {
                 String tagsStr = resultSet.getString("tags");
                 String[] tags = tagsStr.split(",");
 
-                Issue issue = new Issue(title, description, Status.values()[statusOrdinal],
-                        Types.values()[typeOrdinal], Priority.values()[priorityOrdinal], new ArrayList<>(Arrays.asList(tags)));
+                int userId = resultSet.getInt("user_id");
+                int projectId = resultSet.getInt("project_id");
+                // Create the Project object for the issue
+                Issue issue = new Issue(issueId, title, description, Status.values()[statusOrdinal],
+                        Types.values()[typeOrdinal], Priority.values()[priorityOrdinal], new ArrayList<>(Arrays.asList(tags)), projectId,userId);
                 issue.setId(issueId);
                 issue.setCreateDate(createDate != null ? new Date(createDate.getTime()) : null);
                 issue.setUpdateDate(updateDate != null ? new Date(updateDate.getTime()) : null);
 
-                // Create the Project object for the issue
-                Project project = new Project();
-                project.setId(resultSet.getInt("p.id"));
-                project.setTitle(resultSet.getString("p.title"));
-                // Set other project fields if needed
 
-                issue.setProject(project); // Set the project for the issue
+                // Set other project fields if needed
+                issue.setUserId(userId);
+                issue.setProjectId(projectId); // Set the project for the issue
                 issues.add(issue);
             }
         } catch (SQLException e) {
@@ -140,8 +143,6 @@ public class IssueDatabase {
 
         return issues;
     }
-
-
 
 
 }

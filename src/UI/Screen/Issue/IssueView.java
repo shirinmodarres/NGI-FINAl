@@ -79,9 +79,9 @@ EditIssueView editIssueView;
         addIssuePlace.setLayout(null);
         addIssuePlace.setVisible(true);
         addIssuePlace.setBackground(new Color(255, 255, 255, 25));
-        addIssuePlace.setBounds(20, 103, 130, 107);
+        addIssuePlace.setBounds(20, 103, 170, 107);
 
-        ImageButton addIssueIcon = new ImageButton("img/add25.png", 43, 32, 44, 44);
+        ImageButton addIssueIcon = new ImageButton("img/add25.png", 65, 42, 25, 25);
         addIssueIcon.addActionListener(addIssueEvent);
         addIssuePlace.add(addIssueIcon);
 
@@ -91,16 +91,16 @@ EditIssueView editIssueView;
     public void generateIssuePlacePanels(Project project) {
         int x = 20;
         int y = 103;
-        int padding = 70;
+        int padding = 40;
         int containerWidth = 700;
         int currentX = x;
         int currentY = y;
-        Color color = getRandomColor();
 
 
         for (Issue issue : issueController.getIssueManager().getIssueDatabase().getAllIssues()) {
-            currentX += 130 + padding;
-            if (currentX + 130 + padding > containerWidth) {
+            Color color = getRandomColor();
+            currentX += 170 + padding;
+            if (currentX + 170 + padding > containerWidth) {
                 currentX = x;
                 currentY += 107 + padding;
             }
@@ -116,7 +116,7 @@ EditIssueView editIssueView;
         issuePlace.setBorder(new RoundedBorder(color, 6, 3));
         issuePlace.setLayout(null);
         issuePlace.setBackground(new Color(color.getRed(), color.getGreen(), color.getBlue(), 60));
-        issuePlace.setBounds(x, y, 130, 107);
+        issuePlace.setBounds(x, y, 170, 107);
         issuePlace.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -131,7 +131,7 @@ EditIssueView editIssueView;
         });
         add(issuePlace);
 
-        ImageButton removeBtn = new ImageButton("img/remove.png", 20, 10, 25, 25);
+        ImageButton removeBtn = new ImageButton("img/remove15.png", 110, 5, 15, 15);
         removeBtn.addActionListener(e -> {
             int dialogResult = JOptionPane.showConfirmDialog(
                     this,
@@ -152,7 +152,7 @@ EditIssueView editIssueView;
             }
         });
         issuePlace.add(removeBtn);
-        ImageButton editBtn = new ImageButton("img/edit.png", 140, 10, 25, 25);
+        ImageButton editBtn = new ImageButton("img/edit15.png", 145, 5, 15, 15);
         editBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -174,11 +174,12 @@ EditIssueView editIssueView;
         CustomLabel date = new CustomLabel(issue.getFormattedDate().toString(), subTextFont, 5, 5, 100, 25);
         issuePlace.add(date);
 
-        CustomLabel title = new CustomLabel(issue.getTitle(), textFont, 10, 30, 110, 25);
+        CustomLabel title = new CustomLabel(issue.getTitle(), textFont, 5, 30, 160, 25);
         title.setHorizontalAlignment(JLabel.CENTER);
         issuePlace.add(title);
 
-        CustomLabel status = new CustomLabel(issue.getStatus().toString(), subTextFont, 10, 60, 110, 25);
+        CustomLabel status = new CustomLabel(issue.getStatus().toString(), subTextFont, 5, 70, 160, 25);
+        status.setHorizontalAlignment(JLabel.CENTER);
         issuePlace.add(status);
 
         int rowCount = (issueController.getIssueManager().getIssueDatabase().getAllIssues().size() + 2) / 3;

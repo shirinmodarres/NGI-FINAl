@@ -74,10 +74,10 @@ public class UserManager {
         return null; // User not found
     }
 
-    public User findUserByName(String email) {
+    public User findUserByName(String name) {
 
         for (User user : userDatabase.getAllUsers()) {
-            if (user.getEmail().equalsIgnoreCase(email)) {
+            if (user.getName().equalsIgnoreCase(name)) {
                 return user;
             }
         }
