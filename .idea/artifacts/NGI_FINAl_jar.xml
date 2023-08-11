@@ -4,6 +4,7 @@
     <root id="archive" name="NGI-FINAl.jar">
       <element id="module-output" name="NGI-FINAl" />
       <element id="extracted-dir" path="$PROJECT_DIR$/../mysql-connector-j-8.1.0/mysql-connector-j-8.1.0.jar" path-in-jar="/" />
+      <element id="dir-copy" path="$PROJECT_DIR$/img" />
     </root>
   </artifact>
 </component>

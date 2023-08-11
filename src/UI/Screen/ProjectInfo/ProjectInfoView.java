@@ -1,13 +1,16 @@
 package UI.Screen.ProjectInfo;
 
+import Core.DataBase.AssignUserProjectRepository;
 import Core.DataBase.UserDatabase;
 import Core.Model.Project;
 import Core.Model.User;
+import UI.Component.CircleList;
 import UI.Component.CustomLabel;
 import UI.Component.ImageButton;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 
 public class ProjectInfoView extends JPanel {
     private final Font textFont = new Font("Calibri", Font.PLAIN, 20);
@@ -38,57 +41,26 @@ public class ProjectInfoView extends JPanel {
 
         ImageButton addIcon = new ImageButton("img/add25.png", 645, 235, 25, 25);
         add(addIcon);
-//        addIcon.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                // Show a dialog to select a user
-//                List<User> allUsers = userDatabase.getAllUsers(); // Get all users from UserDatabase
-//                String[] userNames = new String[allUsers.size()];
-//
-//                for (int i = 0; i < allUsers.size(); i++) {
-//                    userNames[i] = allUsers.get(i).getName();
-//                }
-//
-//                String selectedUserName = (String) JOptionPane.showInputDialog(
-//                        null,
-//                        "Select a user:",
-//                        "Add User to Project",
-//                        JOptionPane.PLAIN_MESSAGE,
-//                        null,
-//                        userNames,
-//                        null
-//                );
-//
-//                if (selectedUserName != null) {
-//                    // Call projectAssignments.assignProjectToUser(...) with the selected user
-//                    projectAssignments.assignProjectToUser(selectedUserName, project.getTitle().toString());
-//                    // Redraw the circles to reflect the updated members
-//                    repaint();
-//                }
-//            }
-//        });
 
-//        List<User> projectMembers = projectAssignments.getMembersForProject(project.getTitle().toString());
-//        for (int i = 0; i < projectMembers.size(); i++) {
-//            drawCircle(projectMembers.get(i), i); // Draw circle for each member
-//        }
+
+        ArrayList<User> allMembers = (ArrayList<User>) AssignUserProjectRepository.getInstance().getMembersForProject(project); // Retrieve all available users
+
+        ArrayList<String> memberNames = new ArrayList<>();
+        for (User member : allMembers) {
+            memberNames.add(member.getName());
+
+        }
+
+        CircleList circleListPanel = new CircleList(memberNames, 50, 10, 10);
+        circleListPanel.setBounds(70, 250, 500, 100);
+        add(circleListPanel);
+        JScrollPane usersCircleScrollPane = circleListPanel.getScrollPane();
+
+        usersCircleScrollPane.setBounds(70, 250, 500, 100);
+        add(usersCircleScrollPane);
+
+
+
     }
 
-    private void drawCircle(User member, int index) {
-        Graphics2D g2d = (Graphics2D) getGraphics();
-
-        int radius = 20; // Adjust the radius as needed
-        int padding = 10; // Adjust the padding between circles
-
-        int x = 70 + (radius * 2 + padding) * index; // Calculate X coordinate with padding
-        int y = 300; // Replace with the actual Y coordinate
-
-        g2d.setColor(Color.GRAY);
-        g2d.fillOval(x, y, radius * 2, radius * 2);
-    }
-
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-    }
-}
+ }

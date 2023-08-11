@@ -2,8 +2,13 @@ package Core.Manager;
 
 import Core.DataBase.IssueDatabase;
 import Core.Model.Issue;
+import Core.Model.Status;
+import Core.Model.User;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class IssueManager {
     private static IssueManager instance; // Singleton instance
@@ -50,4 +55,5 @@ public class IssueManager {
     public IssueDatabase getIssueDatabase() {
         return issueDatabase;
     }
+
 }

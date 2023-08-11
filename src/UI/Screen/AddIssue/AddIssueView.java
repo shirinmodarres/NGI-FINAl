@@ -18,7 +18,7 @@ import java.util.List;
 public class AddIssueView extends JFrame {
     private AddIssueController addIssueController;
 
-    public AddIssueView(Project project, IssueManager issueManager) {
+    public AddIssueView(Project project, IssueManager issueManager,AddIssueViewEventListener addIssueViewEventListener) {
         addIssueController = new AddIssueController();
         //Setting
         setLayout(null);
@@ -132,10 +132,10 @@ public class AddIssueView extends JFrame {
 
     }
 
-//    public interface AddIssueViewEventListener {
-//        void onPageClosed();
-//
-//    }
+    public interface AddIssueViewEventListener {
+        void onPageClosed();
+
+    }
 }
 
 

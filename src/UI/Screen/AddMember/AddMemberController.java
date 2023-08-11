@@ -2,6 +2,7 @@ package UI.Screen.AddMember;
 
 import Core.Manager.UserManager;
 import Core.Model.Role;
+import Core.Model.User;
 
 public class AddMemberController {
     private UserManager userManager;
@@ -11,8 +12,9 @@ public class AddMemberController {
     }
 
     // Add a new user
-    public void addUser(String nickname, String email, String password, Role roll) {
+    public User addUser(String nickname, String email, String password, Role roll) {
         userManager.addUser(nickname, email, password, roll); // Sending data to UserManager
+        return null;
     }
 
     // Edit an existing user

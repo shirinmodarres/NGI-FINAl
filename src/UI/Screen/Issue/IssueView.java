@@ -174,7 +174,7 @@ EditIssueView editIssueView;
         CustomLabel date = new CustomLabel(issue.getFormattedDate().toString(), subTextFont, 5, 5, 100, 25);
         issuePlace.add(date);
 
-        CustomLabel title = new CustomLabel(issue.getTitle(), textFont, 5, 30, 160, 25);
+        CustomLabel title = new CustomLabel(issue.getTitle(), textFont, 5, 20, 160, 25);
         title.setHorizontalAlignment(JLabel.CENTER);
         issuePlace.add(title);
 

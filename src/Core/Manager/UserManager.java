@@ -5,6 +5,7 @@ import Core.Model.User;
 import Core.Model.Role;
 
 import java.util.ArrayList;
+import java.util.regex.Pattern;
 
 public class UserManager {
     private static UserManager instance; // Singleton instance
@@ -23,12 +24,12 @@ public class UserManager {
         return instance;
     }
 
-    public ArrayList<User> addUser(String nickname, String email, String password, Role role) {
+    public User addUser(String nickname, String email, String password, Role role) {
         User newUser = new User(-1, nickname, email, password, role);
 //        orm.getRepository("User").insert(newUser);
         users.add(newUser);
-        userDatabase.addUser(newUser);
-        return users;
+        User userDb= userDatabase.addUser(newUser);
+        return userDb;
     }
 
 //    public void updateUser(String nickname, String email, String password, Role role) {
@@ -104,6 +105,14 @@ public class UserManager {
         return userDatabase;
     }
 
+
+    public   boolean isPasswordValid(String password) {
+        return Pattern.matches("^(?=.*[A-Za-z])(?=.*\\d).{8,}$", password);
+    }
+
+    public   boolean isEmailValid(String email) {
+        return Pattern.matches("^[A-Za-z0-9+_.-]+@([A-Za-z0-9.-]+\\.)+[A-Za-z]{2,}$", email);
+    }
 
 }
 

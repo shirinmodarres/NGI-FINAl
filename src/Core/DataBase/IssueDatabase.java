@@ -6,10 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 public class IssueDatabase {
     private static IssueDatabase instance;
@@ -143,6 +140,70 @@ public class IssueDatabase {
 
         return issues;
     }
+    private Role convertToRole(int roleInt) {
+        switch (roleInt) {
+            case 0:
+                return Role.SUPER_ADMIN;
+            case 1:
+                return Role.PO;
+            case 2:
+                return Role.DEVELOPER;
+            case 3:
+                return Role.TESTER;
+            default:
+                throw new IllegalArgumentException("Invalid role value: " + roleInt);
+        }
+    }
+    public Map<User, Map<Status, List<Issue>>> groupIssuesByUserAndStatus() {
+        Map<User, Map<Status, List<Issue>>> groupedIssues = new HashMap<>();
+
+        try {
+            String query = "SELECT i.*, p.*, u.* FROM issues i " +
+                    "LEFT JOIN project p ON i.project_id = p.`id`" +
+                    "LEFT JOIN user u ON i.user_id = u.`id`"; // Join issues with projects and user tables
+            PreparedStatement statement = database.getConnection().prepareStatement(query);
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                int issueId = resultSet.getInt("id");
+                String title = resultSet.getString("title");
+                String description = resultSet.getString("description");
+                int statusOrdinal = resultSet.getInt("status");
+                Date createDate = resultSet.getDate("createDate");
+                Date updateDate = resultSet.getDate("updateDate");
+                int typeOrdinal = resultSet.getInt("type");
+                int priorityOrdinal = resultSet.getInt("priority");
+                String tagsStr = resultSet.getString("tags");
+                String[] tags = tagsStr.split(",");
+
+                int userId = resultSet.getInt("user_id");
+                int projectId = resultSet.getInt("project_id");
+
+                User user = new User(userId,
+                        resultSet.getString("name"),
+                        resultSet.getString("email"),
+                        resultSet.getString("password"),
+                        convertToRole(resultSet.getInt("role")));
+
+                Issue issue = new Issue(issueId, title, description, Status.values()[statusOrdinal],
+                        Types.values()[typeOrdinal], Priority.values()[priorityOrdinal],
+                        new ArrayList<>(Arrays.asList(tags)), projectId, userId);
+                issue.setId(issueId);
+                issue.setCreateDate(createDate != null ? new Date(createDate.getTime()) : null);
+                issue.setUpdateDate(updateDate != null ? new Date(updateDate.getTime()) : null);
+
+                // Add the issue to the appropriate user's map
+                groupedIssues.computeIfAbsent(user, k -> new HashMap<>())
+                        .computeIfAbsent(Status.values()[statusOrdinal], k -> new ArrayList<>())
+                        .add(issue);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace(); // Handle or log the exception as needed
+        }
+
+        return groupedIssues;
+    }
+
 
 
 }

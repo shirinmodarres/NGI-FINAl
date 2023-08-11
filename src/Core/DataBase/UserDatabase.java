@@ -1,5 +1,6 @@
 package Core.DataBase;
 
+import Core.Model.Project;
 import Core.Model.Role;
 import Core.Model.User;
 
@@ -22,7 +23,7 @@ public class UserDatabase {
         return instance;
     }
 //TODO why use prepared statement
-    public void addUser(User user) {
+    public User addUser(User user) {
         try {
             String query = "INSERT INTO user (name, email, password, role) VALUES (?, ?, ?, ?)";
             PreparedStatement statement = dataBase.getConnection().prepareStatement(query);
@@ -35,6 +36,7 @@ public class UserDatabase {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return user;
     }
     public void editUser(User user) {
         try {
@@ -135,6 +137,27 @@ public class UserDatabase {
 
         return null;
     }
+    public User findUserByName(String name) {
+        try {
+            String query = "SELECT * FROM user WHERE name=?";
+            PreparedStatement statement = dataBase.getConnection().prepareStatement(query);
+            statement.setString(1, name);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                int id = resultSet.getInt("id");
+                String email = resultSet.getString("email");
+                String password = resultSet.getString("password");
+                int roleInt = resultSet.getInt("role");
+                Role role = convertToRole(roleInt); // Convert the integer value to the corresponding Role enum
+
+                return new User(id, name, email, password, role);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
 
     public boolean isDatabaseEmpty() {
         try {
@@ -169,22 +192,5 @@ public class UserDatabase {
             e.printStackTrace();
         }
     }
-    public void getUsersByProject (int id){
-        try {
-            String query = "SELECT user.* FROM project_user LEFT JOIN user ON user.id = project_user.user_id WHERE project_user.project_id = ?";
-            PreparedStatement statement = dataBase.getConnection().prepareStatement(query);
-            statement.setInt(1, id);
 
-            int rowsAffected = statement.executeUpdate();
-
-            if (rowsAffected == 0) {
-                System.out.println("User with email '" + id + "' not found in the database.");
-            } else {
-                System.out.println("User with email '" + id + "' removed successfully.");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-    }
 }

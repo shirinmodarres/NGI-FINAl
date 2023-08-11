@@ -1,6 +1,8 @@
 package UI.Screen.Member;
 
+import Core.DataBase.ProjectDatabase;
 import Core.DataBase.UserDatabase;
+import Core.Manager.ProjectManager;
 import Core.Manager.UserManager;
 import Core.Model.User;
 import UI.Component.*;
@@ -144,7 +146,7 @@ public class MemberView extends JPanel {
         memberPlace.add(removeBtn);
         ImageButton editBtn = new ImageButton("img/edit.png", 140, 10, 25, 25);
         editBtn.addActionListener(e -> {
-            editMemberView = new EditMemberView(user, UserManager.getInstance(UserDatabase.getInstance()), updatedUser -> {
+            editMemberView = new EditMemberView(user, ProjectManager.getInstance(ProjectDatabase.getInstance()), UserManager.getInstance(UserDatabase.getInstance()), updatedUser -> {
                 memberPlace.removeAll();
                 generateMemeber(updatedUser, x, y, padding, containerWidth);
                 editMemberView.setVisible(false);

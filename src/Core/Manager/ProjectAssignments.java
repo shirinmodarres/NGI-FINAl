@@ -1,5 +1,6 @@
 package Core.Manager;
 
+import Core.DataBase.AssignUserProjectRepository;
 import Core.Model.Project;
 import Core.Model.User;
 
@@ -8,10 +9,8 @@ import java.util.*;
 
 public class ProjectAssignments {
     private static ProjectAssignments instance;
-    private Map<User, List<Project>> userToProjectsMap;
 
     private ProjectAssignments() {
-        userToProjectsMap = new HashMap<>();
     }
 
     public static ProjectAssignments getInstance() {
@@ -20,39 +19,24 @@ public class ProjectAssignments {
         }
         return instance;
     }
+
     public void assignProjectToUser(User user, Project project) {
-        userToProjectsMap.computeIfAbsent(user, k -> new ArrayList<>()).add(project);
+        AssignUserProjectRepository.getInstance().assignProjectToUser(user, project);
     }
 
     public void unassignProjectFromUser(User user, Project project) {
-        List<Project> projects = userToProjectsMap.get(user);
-        if (projects != null) {
-            projects.remove(project);
-            if (projects.isEmpty()) {
-                userToProjectsMap.remove(user);
-            }
-        }
+        AssignUserProjectRepository.getInstance().unassignProjectFromUser(user, project);
+
     }
 
     public List<Project> getAssignedProjectsForUser(User user) {
-        return userToProjectsMap.getOrDefault(user, new ArrayList<>());
+        return AssignUserProjectRepository.getInstance().getAssignedProjectsForUser(user);
     }
 
     public List<User> getMembersForProject(Project project) {
-        List<User> members = new ArrayList<>();
-        for (Map.Entry<User, List<Project>> entry : userToProjectsMap.entrySet()) {
-            if (entry.getValue().contains(project)) {
-                members.add(entry.getKey());
-            }
-        }
-        return members;
-    }
+        return AssignUserProjectRepository.getInstance().getMembersForProject(project);
 
-    public Map<User, List<Project>> getAllAssignments() {
-        return userToProjectsMap;
     }
-
-    // Conversion methods
 
 
 }
